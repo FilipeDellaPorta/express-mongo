@@ -1,4 +1,4 @@
-import autor from '../models/Autor.js';
+import { autor } from '../models/Autor.js';
 
 class AutorController {
   static async listarAutores(req, res) {
