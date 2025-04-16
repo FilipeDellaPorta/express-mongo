@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import { autorSchema } from './Autor.js';
 
 const livroSchema = new mongoose.Schema(
   {
@@ -12,7 +11,7 @@ const livroSchema = new mongoose.Schema(
     autor: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'autores',
-      required: [true, 'id autor(a) obrigatório'],
+      required: [true, 'autor(a) é obrigatório(a)'],
     },
   },
   { versionKey: false }
