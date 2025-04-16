@@ -16,18 +16,26 @@ class LivroController {
     try {
       const id = req.params.id;
       const livroEncontrado = await livro.findById(id);
-      res.status(200).json(livroEncontrado);
+      if (livroEncontrado) {
+        res.status(200).json(livroEncontrado);
+      } else {
+        res.status(404).json({ message: 'livro não localizado por este ID' });
+      }
     } catch (error) {
       next(error);
     }
   }
 
   static async criarLivro(req, res, next) {
-    const novoLivro = req.body;
-    const autorEncontrado = await autor.findById(novoLivro.autor);
     try {
+      const novoLivro = req.body;
+      const autorEncontrado = await autor.findById(novoLivro.autor);
       if (!autorEncontrado) {
-        throw new mongoose.Error.CastError('ObjectId', novoLivro.autor, 'autor');
+        throw new mongoose.Error.CastError(
+          'ObjectId',
+          novoLivro.autor,
+          'autor'
+        );
       }
       const livroCompleto = {
         ...novoLivro,
