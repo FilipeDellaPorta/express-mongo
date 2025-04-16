@@ -1,5 +1,5 @@
-import { autor } from '../models/Autor.js';
-import livro from '../models/Livro.js';
+import { autor } from '../models/index.js';
+import { livro } from '../models/index.js';
 import Erro404 from '../errors/Erro404.js';
 
 class LivroController {
@@ -37,11 +37,7 @@ class LivroController {
           )
         );
       }
-      const livroCompleto = {
-        ...novoLivro,
-        autor: { ...autorEncontrado._doc },
-      };
-      const livroCriado = await livro.create(livroCompleto);
+      const livroCriado = await livro.create(novoLivro);
       res.status(201).json({
         message: 'Livro cadastrado com sucesso!',
         livro: livroCriado,
