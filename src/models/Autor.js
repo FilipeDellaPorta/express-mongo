@@ -4,7 +4,6 @@ const autorSchema = new mongoose.Schema(
   {
     id: { type: mongoose.Schema.Types.ObjectId },
     nome: { type: String, required: [true, 'nome autor(a) obrigatório'] },
-    nacionalidade: { type: String },
   },
   { versionKey: false }
 );
