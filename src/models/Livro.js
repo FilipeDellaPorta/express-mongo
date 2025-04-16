@@ -9,8 +9,6 @@ const livroSchema = new mongoose.Schema(
       required: [true, 'título livro obrigatório'],
     },
     editora: { type: String },
-    preco: { type: mongoose.Schema.Types.Number },
-    paginas: { type: Number },
     autor: { autorSchema, required: [true, 'id autor(a) obrigatório'] },
   },
   { versionKey: false }
