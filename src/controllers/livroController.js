@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import { autor } from '../models/Autor.js';
 import livro from '../models/Livro.js';
 
@@ -23,16 +24,20 @@ class LivroController {
 
   static async criarLivro(req, res, next) {
     const novoLivro = req.body;
+    const autorEncontrado = await autor.findById(novoLivro.autor);
     try {
-      const autorEncontrado = await autor.findById(novoLivro.autor);
+      if (!autorEncontrado) {
+        throw new mongoose.Error.CastError('ObjectId', novoLivro.autor, 'autor');
+      }
       const livroCompleto = {
         ...novoLivro,
         autor: { ...autorEncontrado._doc },
       };
       const livroCriado = await livro.create(livroCompleto);
-      res
-        .status(201)
-        .json({ message: 'Livro cadastrado com sucesso!', livro: livroCriado });
+      res.status(201).json({
+        message: 'Livro cadastrado com sucesso!',
+        livro: livroCriado,
+      });
     } catch (error) {
       next(error);
     }
