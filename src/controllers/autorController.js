@@ -1,3 +1,4 @@
+import Erro404 from '../errors/Erro404.js';
 import { autor } from '../models/Autor.js';
 
 class AutorController {
@@ -18,7 +19,7 @@ class AutorController {
       if (autorEncontrado) {
         res.status(200).json(autorEncontrado);
       } else {
-        res.status(404).json({ message: 'autor não localizado por este ID' });
+        next(new Erro404('autor não localizado por este ID'));
       }
     } catch (error) {
       next(error);
@@ -39,6 +40,9 @@ class AutorController {
   static async editarAutorPorId(req, res, next) {
     try {
       const id = req.params.id;
+      if (!id) {
+        next(new Erro404('autor não localizado por este ID'));
+      }
       await autor.findByIdAndUpdate(id, req.body);
       res.status(200).json({ message: 'Autor atualizado!' });
     } catch (error) {
@@ -49,6 +53,9 @@ class AutorController {
   static async deletarAutorPorId(req, res, next) {
     try {
       const id = req.params.id;
+      if (!id) {
+        next(new Erro404('autor não localizado por este ID'));
+      }
       await autor.findByIdAndDelete(id);
       res.status(200).json({ message: 'Autor excluído com sucesso!' });
     } catch (error) {
