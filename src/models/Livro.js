@@ -8,8 +8,12 @@ const livroSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.String,
       required: [true, 'título livro obrigatório'],
     },
-    editora: { type: String },
-    autor: { autorSchema, required: [true, 'id autor(a) obrigatório'] },
+    editora: { type: String, required: [true, 'editora obrigatória'] },
+    autor: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'autores',
+      required: [true, 'id autor(a) obrigatório'],
+    },
   },
   { versionKey: false }
 );
