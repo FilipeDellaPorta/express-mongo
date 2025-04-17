@@ -76,16 +76,21 @@ class LivroController {
   static async listarLivrosPorFiltro(req, res, next) {
     try {
       const { editora, titulo } = req.query;
+      const regex = new RegExp(titulo, 'i');
       const busca = {};
 
       if (editora) busca.editora = editora;
-      if (titulo) busca.titulo = titulo;
+      if (titulo) busca.titulo = regex;
 
       if (!busca) {
         next(new Erro404('livro não localizado'));
       }
 
       const livrosPorEditora = await livro.find(busca);
+
+      if (!Array.isArray(livrosPorEditora) || livrosPorEditora.length === 0) {
+        next(new Erro404('livro não localizado'));
+      }
       res.status(200).json(livrosPorEditora);
     } catch (error) {
       next(error);
