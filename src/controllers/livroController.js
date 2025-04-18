@@ -14,6 +14,7 @@ class LivroController {
       if (limite > 0 && pagina > 0) {
         const listaLivros = await livro
           .find({})
+          .sort({ titulo: 1 })
           .skip((pagina - 1) * limite)
           .limit(limite);
         res.status(200).json(listaLivros);
@@ -76,10 +77,17 @@ class LivroController {
   static async deletarLivroPorId(req, res, next) {
     try {
       const id = req.params.id;
+
       if (!id) {
-        next(new Erro404('livro não localizado por este ID'));
+        return next(new Erro404('ID não fornecido'));
       }
-      await livro.findByIdAndDelete(id);
+
+      const livroDeletado = await livro.findByIdAndDelete(id);
+
+      if (!livroDeletado) {
+        return next(new Erro404('livro não localizado por este ID'));
+      }
+
       res.status(200).json({ message: 'Livro excluído com sucesso!' });
     } catch (error) {
       next(error);
