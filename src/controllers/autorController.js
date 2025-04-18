@@ -53,10 +53,17 @@ class AutorController {
   static async deletarAutorPorId(req, res, next) {
     try {
       const id = req.params.id;
+
       if (!id) {
-        next(new Erro404('autor não localizado por este ID'));
+        return next(new Erro404('ID não fornecido'));
       }
-      await autor.findByIdAndDelete(id);
+
+      const autorDeletado = await autor.findByIdAndDelete(id);
+
+      if (!autorDeletado) {
+        return next(new Erro404('autor não localizado por este ID'));
+      }
+      
       res.status(200).json({ message: 'Autor excluído com sucesso!' });
     } catch (error) {
       next(error);
