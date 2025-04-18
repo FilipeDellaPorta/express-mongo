@@ -1,12 +1,25 @@
 import { autor } from '../models/index.js';
 import { livro } from '../models/index.js';
 import Erro404 from '../errors/Erro404.js';
+import RequisicaoIncorreta from '../errors/RequisicaoIncorreta.js';
 
 class LivroController {
   static async listarLivros(req, res, next) {
     try {
-      const listaLivros = await livro.find({});
-      res.status(200).json(listaLivros);
+      let { limite = 5, pagina = 1 } = req.query;
+
+      limite = parseInt(limite);
+      pagina = parseInt(pagina);
+
+      if (limite > 0 && pagina > 0) {
+        const listaLivros = await livro
+          .find({})
+          .skip((pagina - 1) * limite)
+          .limit(limite);
+        res.status(200).json(listaLivros);
+      } else {
+        next(new RequisicaoIncorreta());
+      }
     } catch (error) {
       next(error);
     }
