@@ -75,11 +75,18 @@ class LivroController {
 
   static async listarLivrosPorFiltro(req, res, next) {
     try {
-      const { editora, titulo } = req.query;
+      const { editora, titulo, nomeAutor } = req.query;
       const busca = {};
 
       if (editora) busca.editora = editora;
       if (titulo) busca.titulo = { $regex: titulo, $options: 'i' };
+      if (nomeAutor) {
+        const autorEncontrado = await autor.findOne({ nome: nomeAutor });
+        if (!autorEncontrado) {
+          return next(new Erro404('autor não encontrado'));
+        }
+        busca.autor = autorEncontrado._id;
+      }
 
       if (!busca) {
         next(new Erro404('livro não localizado'));
